@@ -9,7 +9,12 @@ from game.server import Server
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret!"
-socketio = SocketIO(app, cors_allowed_origins=["http://localhost:3000"])
+socketio = SocketIO(
+    app,
+    cors_allowed_origins=["http://localhost:3000"],
+    engineio_logger=True,
+    logger=True,
+)
 
 server = Server(socketio)
 

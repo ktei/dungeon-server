@@ -30,7 +30,6 @@ class LizardAI:
                 Direction(state["direction"]),
                 state["is_collided"],
             )
-        # print(dumps(self._lizard_states))
 
     def compute_directions(self) -> Dict[int, Direction]:
         """

@@ -29,4 +29,3 @@ class State(NamedTuple):
     coord: Coordinate
     direction: Direction
     is_collided: bool  # wether lizard has collided with wall
-
