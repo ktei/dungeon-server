@@ -1,0 +1,10 @@
+[MASTER]
+disable=
+    C0114, # (missing-module-docstring)
+    C0115, # (missing-class-docstring)
+    C0116, #(missing-function-docstring)
+    import-error
+
+[BASIC]
+# Good variable names which should always be accepted, separated by a comma.
+good-names=x, y, j, k, n, i
