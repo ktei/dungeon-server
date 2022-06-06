@@ -51,7 +51,7 @@ class LizardAI:
 
     def is_time_to_update(self, lizard_id: int, threshold: int) -> bool:
         """
-        Given an id of a lizard, compute the time difference
+        Given a lizard id, compute the time difference
         between last update and current time. If the difference
         is greater or equal than the threshold (seconds),
         return true, otherwise false

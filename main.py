@@ -2,10 +2,12 @@
 Application entry point
 """
 
+from typing import Dict
+
 from flask import Flask
 from flask_socketio import SocketIO
 
-from game.server import Server
+from game.server import GameServer
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret!"
@@ -16,12 +18,12 @@ socketio = SocketIO(
     logger=True,
 )
 
-server = Server(socketio)
+game_server = GameServer(socketio)
 
 
-@socketio.on("message")
-def handle_message(data):
-    server.receive_game_data(data)
+@socketio.on("data")
+def handle_data(data: Dict[str, Dict]):
+    game_server.receive_game_data(data)
 
 
 if __name__ == "__main__":
