@@ -6,9 +6,9 @@ we can test the communication between back and front.
 """
 from random import randint
 from time import time
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
-from game.common_types import Coordinate, Direction, State
+from game.common_types import Direction
 
 
 class LizardAI:
@@ -17,19 +17,15 @@ class LizardAI:
     """
 
     def __init__(self):
-        self._lizard_states: Dict[int, State] = {}
+        self._lizard_states: Dict[int, Dict] = {}
         self._last_update_timestamps: Dict[int, Optional[time]] = {}
 
-    def update_states(self, states: Dict[int, Dict]):
+    def update_states(self, data: List):
         """
         Replace current states with new state
         """
-        for lizard_id, state in states.items():
-            self._lizard_states[lizard_id] = State(
-                Coordinate(state["coord"]["x"], state["coord"]["y"]),
-                Direction(state["direction"]),
-                state["is_collided"],
-            )
+        for item in [x for x in data if x["name"] == "lizard"]:
+            self._lizard_states[item["id"]] = item
 
     def compute_directions(self) -> Dict[int, Direction]:
         """
@@ -40,12 +36,12 @@ class LizardAI:
         for lizard_id, state in self._lizard_states.items():
             # update time threshold is random
             threshold = randint(1, 4)  # every 1-4 secs, we change direction
-            should_update = state.is_collided or self.is_time_to_update(
-                lizard_id, threshold
-            )
+            should_update = state.get(
+                "collision", None
+            ) is not None or self.is_time_to_update(lizard_id, threshold)
             if should_update:
                 # push the next direction into result
-                result[lizard_id] = get_next_direction(state.direction)
+                result[lizard_id] = LizardAI.get_next_direction(state["direction"])
                 self._last_update_timestamps[lizard_id] = time()
         return result
 
@@ -63,14 +59,13 @@ class LizardAI:
 
         return True
 
-
-def get_next_direction(direction: Direction) -> Direction:
-    """
-    Given current direction, randomly return a direction
-    that is NOT current direction
-    """
-    candidates = [Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT]
-    if direction != Direction.NONE:
+    @staticmethod
+    def get_next_direction(direction: Direction) -> Direction:
+        """
+        Given current direction, randomly return a direction
+        that is NOT current direction
+        """
+        candidates = [Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT]
         candidates.remove(direction)
-    idx = randint(0, len(candidates) - 1)
-    return candidates[idx]
+        idx = randint(0, len(candidates) - 1)
+        return candidates[idx]

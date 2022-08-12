@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import List
 
 from flask_socketio import SocketIO
 
@@ -15,7 +15,7 @@ class GameServer:
         self._lizard_ai = LizardAI()
         self._socket = socket
 
-    def receive_game_data(self, data: Dict[int, Dict]) -> None:
+    def receive_game_data(self, data: List) -> None:
         self._lizard_ai.update_states(data)
         result = self._lizard_ai.compute_directions()
         self._socket.emit("data", result)
